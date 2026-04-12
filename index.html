@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Birthday Puzzle 🎉</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: #f0f8ff;
+        padding: 40px;
+        overflow-x: hidden;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .puzzle {
+        font-size: 40px;
+        margin: 30px 0;
+        line-height: 1.5;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 18px;
+        width: 300px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 18px;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    #success {
+        margin-top: 40px;
+        font-size: 24px;
+        color: green;
+    }
+
+    .penguin {
+        position: absolute;
+        font-size: 30px;
+        animation: float 5s linear infinite;
+    }
+
+    @keyframes float {
+        from { transform: translateY(100vh); }
+        to { transform: translateY(-10vh); }
+    }
+</style>
+</head>
+<body>
+
+<h1>🎁 Birthday Puzzle 🎁</h1>
+<p>Can you figure out the puzzle to win the ultimate prize?</p>
+
+<div class="puzzle">
+    🌊<br>
+    🖊️ + Gwyneth<br>
+    🦦 + Go<br>
+    🧳
+</div>
+
+<input type="text" id="answer" placeholder="Type your answer here...">
+<button onclick="checkAnswer()">Enter</button>
+
+<div id="success" class="hidden">
+    🎉 You've won two tickets to the <br><br>
+    <a href="https://www.bluepenguins.co.nz/" target="_blank">
+        Blue Penguins Pukekura Tour 🐧
+    </a>
+</div>
+
+<script>
+function checkAnswer() {
+    const input = document.getElementById("answer").value.toLowerCase().trim();
+
+    if (input === "blue penguin otago experience") {
+        document.getElementById("success").classList.remove("hidden");
+        launchCelebration();
+    } else {
+        alert("Not quite... try again!");
+    }
+}
+
+function launchCelebration() {
+    // confetti effect
+    for (let i = 0; i < 50; i++) {
+        let confetti = document.createElement("div");
+        confetti.innerHTML = "🎉";
+        confetti.style.position = "absolute";
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.top = "-10px";
+        confetti.style.fontSize = "24px";
+        confetti.style.animation = "fall 3s linear forwards";
+        document.body.appendChild(confetti);
+    }
+
+    // penguins floating
+    for (let i = 0; i < 10; i++) {
+        let penguin = document.createElement("div");
+        penguin.classList.add("penguin");
+        penguin.innerHTML = "🐧";
+        penguin.style.left = Math.random() * 100 + "vw";
+        penguin.style.animationDuration = (3 + Math.random() * 5) + "s";
+        document.body.appendChild(penguin);
+    }
+}
+
+// falling animation
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}`;
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
