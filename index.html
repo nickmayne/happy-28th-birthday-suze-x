@@ -3,128 +3,247 @@
 <head>
 <meta charset="UTF-8">
 <title>Birthday Puzzle 🎉</title>
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background: #f0f8ff;
-        padding: 40px;
-        overflow-x: hidden;
-    }
-
-    h1 {
-        font-size: 28px;
-    }
-
-    .puzzle {
-        font-size: 40px;
-        margin: 30px 0;
-        line-height: 1.5;
-    }
-
-    input {
-        padding: 10px;
-        font-size: 18px;
-        width: 300px;
-    }
-
-    button {
-        padding: 10px 20px;
-        font-size: 18px;
-        margin-left: 10px;
-        cursor: pointer;
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    #success {
-        margin-top: 40px;
-        font-size: 24px;
-        color: green;
-    }
-
-    .penguin {
-        position: absolute;
-        font-size: 30px;
-        animation: float 5s linear infinite;
-    }
-
-    @keyframes float {
-        from { transform: translateY(100vh); }
-        to { transform: translateY(-10vh); }
-    }
-</style>
-</head>
-<body>
-
-<h1>🎁 Birthday Puzzle 🎁</h1>
-<p>Can you figure out the puzzle to win the ultimate prize?</p>
-
-<div class="puzzle">
-    🌊<br>
-    🖊️ + Gwyneth<br>
-    🦦 + Go<br>
-    🧳
-</div>
-
-<input type="text" id="answer" placeholder="Type your answer here...">
-<button onclick="checkAnswer()">Enter</button>
-
-<div id="success" class="hidden">
-    🎉 You've won two tickets to the <br><br>
-    <a href="https://www.bluepenguins.co.nz/" target="_blank">
-        Blue Penguins Pukekura Tour 🐧
-    </a>
-</div>
-
-<script>
-function checkAnswer() {
-    const input = document.getElementById("answer").value.toLowerCase().trim();
-
-    if (input === "blue penguin otago experience") {
-        document.getElementById("success").classList.remove("hidden");
-        launchCelebration();
-    } else {
-        alert("Not quite... try again!");
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eaf6ff;
+    text-align: center;
 }
 
-function launchCelebration() {
-    // confetti effect
-    for (let i = 0; i < 50; i++) {
-        let confetti = document.createElement("div");
-        confetti.innerHTML = "🎉";
-        confetti.style.position = "absolute";
-        confetti.style.left = Math.random() * 100 + "vw";
-        confetti.style.top = "-10px";
-        confetti.style.fontSize = "24px";
-        confetti.style.animation = "fall 3s linear forwards";
-        document.body.appendChild(confetti);
-    }
-
-    // penguins floating
-    for (let i = 0; i < 10; i++) {
-        let penguin = document.createElement("div");
-        penguin.classList.add("penguin");
-        penguin.innerHTML = "🐧";
-        penguin.style.left = Math.random() * 100 + "vw";
-        penguin.style.animationDuration = (3 + Math.random() * 5) + "s";
-        document.body.appendChild(penguin);
-    }
+/* CENTER */
+.container {
+    position: relative;
+    z-index: 2;
+    padding: 40px 20px;
 }
 
-// falling animation
-const style = document.createElement('style');
-style.innerHTML = `
+/* PUZZLE */
+.puzzle {
+    font-size: 30px;
+    margin: 30px 0;
+}
+
+.puzzle img {
+    height: 75px;
+    vertical-align: middle;
+}
+
+/* INPUT */
+input {
+    padding: 12px;
+    font-size: 18px;
+    width: 280px;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* SIDE PHOTOS */
+.side-photo {
+    position: fixed;
+    width: 200px; /* bigger */
+    border-radius: 12px;
+    z-index: 1;
+    opacity: 0.95;
+}
+
+/* OVERLAY */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 10;
+    font-size: 28px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* PENGUINS */
+.penguin {
+    position: absolute;
+    font-size: 30px;
+    animation: waddle 2s infinite alternate;
+}
+
+@keyframes waddle {
+    from { transform: translateX(0) rotate(-5deg); }
+    to { transform: translateX(20px) rotate(5deg); }
+}
+
+/* CONFETTI */
 @keyframes fall {
     to {
         transform: translateY(100vh);
         opacity: 0;
     }
-}`;
-document.head.appendChild(style);
+}
+</style>
+</head>
+
+<body>
+
+<!-- SCATTERED BUT SAFE POSITIONS -->
+<script>
+const positions = [
+    {img: "suze1.jpg", top: "10%", left: "3%", rotate: -8},
+    {img: "suze2.jpg", top: "35%", left: "5%", rotate: 6},
+    {img: "suze3.jpg", top: "65%", left: "2%", rotate: -5},
+
+    {img: "suze4.jpg", top: "15%", right: "4%", rotate: 7},
+    {img: "suze5.jpg", top: "40%", right: "3%", rotate: -6},
+    {img: "suze6.jpg", top: "70%", right: "5%", rotate: 8}
+];
+
+positions.forEach(p => {
+    let el = document.createElement("img");
+    el.src = p.img;
+    el.className = "side-photo";
+
+    el.style.top = p.top;
+    if (p.left) el.style.left = p.left;
+    if (p.right) el.style.right = p.right;
+
+    el.style.transform = "rotate(" + p.rotate + "deg)";
+
+    document.body.appendChild(el);
+});
+</script>
+
+<div class="container">
+<h1>🎁 Birthday Puzzle 🎁</h1>
+<p>Can you figure out the puzzle to win the ultimate prize?</p>
+
+<div class="puzzle">
+🌊 <br><br>
+🖊️ + <img src="gwyneth.jpg" onclick="openImage(this.src)"> <br><br>
+🦦 + <img src="traffic.jpg" onclick="openImage(this.src)"> <br><br>
+❌ + 🍐 + <img src="ian.jpg" onclick="openImage(this.src)">
+</div>
+
+<input id="answer" placeholder="Type your answer...">
+<button onclick="checkAnswer()">Enter</button>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay">
+<div id="message">Checking answer... ⏳</div>
+</div>
+
+<script>
+function checkAnswer() {
+    let val = document.getElementById("answer").value.toLowerCase().trim();
+
+    if (val === "blue penguin otago experience") {
+        startReveal();
+    } else {
+        alert("Not quite... try again!");
+    }
+}
+
+function startReveal() {
+    let overlay = document.getElementById("overlay");
+    let message = document.getElementById("message");
+
+    overlay.style.display = "flex";
+
+    setTimeout(() => {
+        message.innerHTML = "Hmm... that looks right 👀";
+    }, 1500);
+
+    setTimeout(() => {
+        message.innerHTML = "Wait for it...";
+    }, 3000);
+
+    setTimeout(() => {
+        message.innerHTML = "🎉 YOU DID IT!!! 🎉";
+        launchCelebration();
+    }, 4500);
+
+    setTimeout(() => {
+        message.innerHTML = `
+        🐧 You've won TWO tickets to the <br><br>
+        <a href="https://www.bluepenguins.co.nz/" target="_blank" style="color: lightblue;">
+        Blue Penguins Pukekura Tour
+        </a>
+        `;
+    }, 6500);
+}
+
+function launchCelebration() {
+
+    for (let i = 0; i < 80; i++) {
+        let c = document.createElement("div");
+        c.innerHTML = "🎉";
+        c.style.position = "absolute";
+        c.style.left = Math.random()*100 + "vw";
+        c.style.top = "-10px";
+        c.style.animation = "fall 3s linear forwards";
+        document.body.appendChild(c);
+    }
+
+    for (let i = 0; i < 12; i++) {
+        let p = document.createElement("div");
+        p.innerHTML = "🐧";
+        p.className = "penguin";
+        p.style.left = Math.random()*100 + "vw";
+        p.style.top = Math.random()*100 + "vh";
+        p.style.fontSize = (20 + Math.random()*40) + "px";
+        document.body.appendChild(p);
+    }
+}
+</script>
+
+<!-- FULLSCREEN IMAGE VIEWER -->
+<div id="imageViewer" onclick="closeImage()">
+    <img id="viewerImg">
+</div>
+
+<style>
+#imageViewer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+#viewerImg {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+}
+</style>
+
+<script>
+function openImage(src) {
+    const viewer = document.getElementById("imageViewer");
+    const img = document.getElementById("viewerImg");
+
+    img.src = src;
+    viewer.style.display = "flex";
+}
+
+function closeImage() {
+    document.getElementById("imageViewer").style.display = "none";
+}
 </script>
 
 </body>
